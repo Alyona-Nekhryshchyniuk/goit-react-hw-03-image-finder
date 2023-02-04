@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import css from './Searchbar.module.css';
 class Searchbar extends Component {
   state = {
     query: '',
@@ -24,7 +25,7 @@ class Searchbar extends Component {
           </button>
           <input
             value={this.state.query}
-            className="input"
+            className={css.input}
             type="text"
             autoComplete="off"
             autoFocus

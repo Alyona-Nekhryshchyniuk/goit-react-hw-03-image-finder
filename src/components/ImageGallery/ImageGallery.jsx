@@ -1,10 +1,9 @@
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
+import css from './ImageGallery.module.css';
 const ImageGallery = ({ items }) => {
   return (
-    <ul className="gallery">
-      {items.map(item => (
-        <ImageGalleryItem item={item} />
-      ))}
+    <ul className={css.gallery}>
+      <ImageGalleryItem items={items} />
     </ul>
   );
 };
