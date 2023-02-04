@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 import Searchbar from './Searchbar/Searchbar';
 import ImageGallery from './ImageGallery/ImageGallery';
-import { Audio } from 'react-loader-spinner';
+import { Dna } from 'react-loader-spinner';
 import Button from './Button/Button';
+import Modal from './Modal/Modal';
 import axios from 'axios';
 
-// import Searchbar from './Searchbar/Searchbar';
-// import Searchbar from './Searchbar/Searchbar';
-// import Searchbar from './Searchbar/Searchbar';
-// import Searchbar from './Searchbar/Searchbar';
 axios.defaults.baseURL = 'https://pixabay.com/api';
 
 class App extends Component {
@@ -18,6 +15,7 @@ class App extends Component {
     page: 1,
     loadMore: false,
     loading: false,
+    // modal: false,
   };
 
   async componentDidUpdate(_, prevState) {
@@ -27,8 +25,7 @@ class App extends Component {
     ) {
       try {
         this.setState({ loading: true, loadMore: false });
-        console.log('перед запросом');
-        console.log(this.state.loadMore);
+
         console.log(this.state.searchQuery !== prevState.searchQuery);
 
         let { data } = await axios.get('/', {
@@ -52,6 +49,10 @@ class App extends Component {
     }
   }
 
+  // openModal = largeImageURL => {
+  //   console.log(largeImageURL);
+  // };
+
   getValue = searchQuery => {
     this.setState({
       items: [],
@@ -68,24 +69,27 @@ class App extends Component {
   };
 
   render() {
-    const { items } = this.state;
+    const { items, modal } = this.state;
 
     return (
       <>
         <Searchbar onSubmit={this.getValue} />
         {this.state.loading ? (
-          <Audio
-            height="80"
-            width="80"
-            radius="9"
-            color="green"
-            ariaLabel="loading"
-            wrapperStyle
-            wrapperClass
+          <Dna
+            visible={true}
+            height="180"
+            width="180"
+            ariaLabel="dna-loading"
+            wrapperStyle={{
+              marginLeft: '50%',
+              transform: 'translate(-50%)',
+              marginTop: 150,
+            }}
           />
         ) : (
           <ImageGallery items={items} />
         )}
+        {/* {modal && <Modal openModal={this.openModal} />} */}
         {items.length && <Button loadMore={this.loadMore} />}
       </>
     );
