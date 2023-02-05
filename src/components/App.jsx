@@ -49,10 +49,6 @@ class App extends Component {
     }
   }
 
-  // openModal = largeImageURL => {
-  //   console.log(largeImageURL);
-  // };
-
   getValue = searchQuery => {
     this.setState({
       items: [],
@@ -89,7 +85,7 @@ class App extends Component {
         ) : (
           <ImageGallery items={items} />
         )}
-        {/* {modal && <Modal openModal={this.openModal} />} */}
+
         {items.length && <Button loadMore={this.loadMore} />}
       </>
     );

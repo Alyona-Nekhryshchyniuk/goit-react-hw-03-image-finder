@@ -3,59 +3,60 @@ import css from './ImageGallery.module.css';
 import { createPortal } from 'react-dom';
 import Modal from '../Modal/Modal';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+const modalRoot = document.querySelector('#modal-root');
+
 class ImageGallery extends Component {
+  static propTypes = {
+    items: PropTypes.array,
+  };
+
   state = {
-    url: '',
+    selectedImg: {
+      url: '',
+      type: '',
+    },
     modal: false,
   };
 
-  componentDidMount() {
-    console.log('start')
-    window.addEventListener('keydown', onEscClick);
-  }
+  getSelectedImageInfo = (largeImageURL, type) => {
+    this.setState({ selectedImg: { url: largeImageURL, type: type } });
+    this.toggleModal();
+  };
 
-  componentWillUnmount(){
-    console.log('finish')
-  }
+  onEscClick = code => {
+    if (code === 'Escape' && this.state.modal) {
+      this.toggleModal();
+    }
+  };
 
   toggleModal = () => {
     this.setState(prevState => ({
       modal: !prevState.modal,
     }));
   };
-
-
-onEscClick = ({ code }) => {
-  if (code === 'Escape' && this.state.modal) {
-    this.toggleModal();
-  }
-}
-  }
-
-  getFullImageSrc = largeImageURL => {
-    this.setState({
-      url: largeImageURL,
-    });
-    this.toggleModal();
+  onBackdropClick = (target, currentTarget) => {
+    target === currentTarget && this.toggleModal();
   };
 
-  // onBackdropClick = ()=>{
-
-  // }
-
   render() {
-    const modalRoot = document.querySelector('#modal-root');
     return (
       <>
         <ul className={css.gallery}>
           <ImageGalleryItem
             items={this.props.items}
-            getFullImageSrc={this.getFullImageSrc}
+            getSelectedImageInfo={this.getSelectedImageInfo}
           />
         </ul>
         {this.state.modal &&
           createPortal(
-            <Modal url={this.state.url} closeModal={this.toggleModal} />,
+            <Modal
+              url={this.state.selectedImg.url}
+              closeModal={this.toggleModal}
+              onEscClick={this.onEscClick}
+              alt={this.state.selectedImg.type}
+              onBackdropClick={this.onBackdropClick}
+            />,
             modalRoot
           )}
       </>
