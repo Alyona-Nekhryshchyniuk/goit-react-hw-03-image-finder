@@ -9,11 +9,28 @@ class ImageGallery extends Component {
     modal: false,
   };
 
+  componentDidMount() {
+    console.log('start')
+    window.addEventListener('keydown', onEscClick);
+  }
+
+  componentWillUnmount(){
+    console.log('finish')
+  }
+
   toggleModal = () => {
     this.setState(prevState => ({
       modal: !prevState.modal,
     }));
   };
+
+
+onEscClick = ({ code }) => {
+  if (code === 'Escape' && this.state.modal) {
+    this.toggleModal();
+  }
+}
+  }
 
   getFullImageSrc = largeImageURL => {
     this.setState({
@@ -21,6 +38,11 @@ class ImageGallery extends Component {
     });
     this.toggleModal();
   };
+
+  // onBackdropClick = ()=>{
+
+  // }
+
   render() {
     const modalRoot = document.querySelector('#modal-root');
     return (
