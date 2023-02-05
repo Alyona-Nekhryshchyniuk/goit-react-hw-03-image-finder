@@ -1,9 +1,10 @@
-import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
-import css from './ImageGallery.module.css';
-import { createPortal } from 'react-dom';
-import Modal from '../Modal/Modal';
 import React, { Component } from 'react';
+import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
+import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
+import css from './ImageGallery.module.css';
+import Modal from '../Modal/Modal';
+
 const modalRoot = document.querySelector('#modal-root');
 
 class ImageGallery extends Component {
@@ -40,23 +41,26 @@ class ImageGallery extends Component {
   };
 
   render() {
+    const { url, type } = this.state.selectedImg;
+    const { toggleModal, onEscClick, onBackdropClick, getSelectedImageInfo } =
+      this;
     return (
       <>
         <ul className={css.gallery}>
           <ImageGalleryItem
             items={this.props.items}
-            getSelectedImageInfo={this.getSelectedImageInfo}
+            getSelectedImageInfo={getSelectedImageInfo}
           />
         </ul>
         {this.state.modal &&
           createPortal(
             <Modal
-              url={this.state.selectedImg.url}
-              closeModal={this.toggleModal}
-              onEscClick={this.onEscClick}
-              alt={this.state.selectedImg.type}
-              onBackdropClick={this.onBackdropClick}
-            />,
+              closeModal={toggleModal}
+              onEscClick={onEscClick}
+              onBackdropClick={onBackdropClick}
+            >
+              <img src={url} alt={type} />
+            </Modal>,
             modalRoot
           )}
       </>

@@ -26,7 +26,11 @@ button {
   border-radius: 5px;
   font-size: inherit;
 }
-/* 
-.dna-wrapper {
-  margin: 50%;
-} */
+
+.error {
+  color: red;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  padding-top: 150px;
+}

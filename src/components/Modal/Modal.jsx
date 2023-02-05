@@ -5,8 +5,7 @@ import PropTypes from 'prop-types';
 
 class Modal extends Component {
   static propTypes = {
-    url: PropTypes.string,
-    alt: PropTypes.string,
+    children: PropTypes.object,
     closeModal: PropTypes.func,
     onEscClick: PropTypes.func,
     onBackdropClick: PropTypes.func,
@@ -35,9 +34,7 @@ class Modal extends Component {
         >
           <FaRegWindowClose />
         </button>
-        <div className={css.modal}>
-          <img src={this.props.url} alt={this.props.type} />
-        </div>
+        <div className={css.modal}>{this.props.children}</div>
       </div>
     );
   }

@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
 import Searchbar from './Searchbar/Searchbar';
+import { getApiImages } from './services/services';
 import ImageGallery from './ImageGallery/ImageGallery';
 import { Dna } from 'react-loader-spinner';
 import Button from './Button/Button';
-import Modal from './Modal/Modal';
-import axios from 'axios';
-
-axios.defaults.baseURL = 'https://pixabay.com/api';
 
 class App extends Component {
   state = {
@@ -15,36 +12,25 @@ class App extends Component {
     page: 1,
     loadMore: false,
     loading: false,
-    // modal: false,
+    error: '',
   };
 
   async componentDidUpdate(_, prevState) {
-    if (
-      this.state.loadMore ||
-      this.state.searchQuery !== prevState.searchQuery
-    ) {
+    const { searchQuery, page, loadMore } = this.state;
+
+    if (loadMore || searchQuery !== prevState.searchQuery) {
       try {
         this.setState({ loading: true, loadMore: false });
 
-        console.log(this.state.searchQuery !== prevState.searchQuery);
-
-        let { data } = await axios.get('/', {
-          params: {
-            q: this.state.searchQuery,
-            page: this.state.page,
-            key: '32103047-74f71fbf2b590f3c03f09df5a',
-            image_type: 'photo',
-            orientation: 'horizontal',
-            per_page: 12,
-          },
-        });
+        const { data } = await getApiImages(searchQuery, page);
 
         this.setState(prevState => ({
-          loading: false,
           items: [...prevState.items, ...data.hits],
         }));
-      } catch (error) {
-        console.error(error);
+      } catch ({ message }) {
+        this.setState({ error: message });
+      } finally {
+        this.setState({ loading: false });
       }
     }
   }
@@ -65,12 +51,13 @@ class App extends Component {
   };
 
   render() {
-    const { items, modal } = this.state;
+    const { items, loading, error } = this.state;
 
     return (
       <>
         <Searchbar onSubmit={this.getValue} />
-        {this.state.loading ? (
+        {error && <p className="error">{error}</p>}
+        {loading ? (
           <Dna
             visible={true}
             height="180"
@@ -86,7 +73,7 @@ class App extends Component {
           <ImageGallery items={items} />
         )}
 
-        {items.length && <Button loadMore={this.loadMore} />}
+        {Boolean(items.length) && <Button loadMore={this.loadMore} />}
       </>
     );
   }
